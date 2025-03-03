@@ -1,8 +1,7 @@
-// Import the Firebase modules you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
-// Your Firebase configuration
+// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyC7_Ta3B3oR9izNHVW9jalmiwXmyl-PIeI",
     authDomain: "smart-health-diagnostics.firebaseapp.com",
@@ -17,12 +16,18 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
+const phRef = ref(database, 'pHValue');
 
-// Reference to pH value in your Firebase Realtime Database
-const phRef = ref(database, 'pHValue');  // Make sure 'pHValue' matches your database structure
-
-// Fetch and display the pH value in real time
+// Fetch and display pH value
 onValue(phRef, (snapshot) => {
     const ph = snapshot.val();
-    document.getElementById('phValue').innerText = `Current pH Value: ${ph}`;
+    console.log("Fetched pH Value:", ph);  // Debugging log
+
+    if (ph !== null) {
+        document.getElementById('phValue').innerText = `Current pH Value: ${ph}`;
+    } else {
+        document.getElementById('phValue').innerText = "No pH data available";
+    }
+}, (error) => {
+    console.error("Firebase Error:", error);  // Log any errors
 });
